@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import difflib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -19,6 +20,8 @@ class RecommenderSystem(object):
 
         self.user_movie = ''
 
+        self.create_index_col()
+
     def get_user_movie(self):
         # movies are recommended based on this movie
         self.user_movie = input("Enter your favourite movie: ")
@@ -27,6 +30,14 @@ class RecommenderSystem(object):
     def get_index(self, movie):
         # getting the index of the closest match (input)
         return self.movies_df[self.movies_df['title'] == movie]['index'].values[0]
+    
+    def create_index_col(self):
+        # every dataset need not have index columns 
+        # so if there is no index column in that dataset,
+        # we create one, so that movies can be uniquely identified
+        if 'index' in self.movies_df.columns:
+            return
+        self.movies_df['index'] = np.arange(self.movies_df.shape[0])
 
     def recommend_movies(self, movie, number_of_movies):
         for feature in self.defining_features:
